@@ -3,11 +3,7 @@
   become: yes
 
   tasks:
-    - name: Allocating 20% of RAM as swap file
-      shell: free -m | grep Mem | awk '{print $2 * .20}'
-      register: ram_20
-
-    - name: Display the amount of RAM that we will allocate as swap file
+    - name: Display the 20% of RAM that we will allocate as swap file
       debug: msg="We will allocate {{ ram_20.stdout[:3] }}MB of ram"
 
     - name: Creating swap file and will not create if /swapfile exist

@@ -8,7 +8,7 @@
 
     - name: Creating swap file and will not create if /swapfile exist
       command: dd if=/dev/zero of=/swapfile bs=1024 count={{ ram_20.stdout[:4] }} bs=1MiB
-                creates="/swapfile"
+               creates="/swapfile"
 
     - name: Updating swap file permissions
       file: path="/swapfile"

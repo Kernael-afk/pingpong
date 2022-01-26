@@ -35,7 +35,7 @@
         - swap.file.permissions
 
     - name: Format swap file
-      sudo: yes
+      become: yes
       command: "mkswap /swapfile"
       when: not swap_file_check.stat.exists
       tags:
@@ -53,20 +53,20 @@
         - swap.fstab
 
     - name: Turn on swap
-      sudo: yes
+      become: yes
       command: swapon -a
       when: not swap_file_check.stat.exists
       tags:
         - swap.turn.on
 
     - name: Set swappiness
-      sudo: yes
+      become: yes
       sysctl:
         name: vm.swappiness
         value: "{{swappiness}}"
       tags:
         - swap.set.swappiness
-    As of Ansible 2.9, sudo declarations should be become:
+    As of Ansible 2.9, become declarations should be become:
 
     - name: Set swap_file variable
       set_fact:

@@ -1,4 +1,4 @@
 - hosts:
-    - all
+    - test_servers
   tasks:
     - action: ping

@@ -16,6 +16,10 @@
       tags:
         - swap.file.check
 
+    - name: Allocating 20% of RAM as swap file
+      shell: free -m | grep Mem | awk '{print $2 * .20}'
+      register: ram_20
+
     - name: Display the amount of RAM that we will allocate as swap file
       debug: msg="We will allocate {{ ram_20.stdout[:3] }}MB of ram"
 
@@ -63,67 +67,6 @@
       become: yes
       sysctl:
         name: vm.swappiness
-        value: "{{swappiness}}"
-      tags:
-        - swap.set.swappiness
-    As of Ansible 2.9, become declarations should be become:
-
-    - name: Set swap_file variable
-      set_fact:
-        swap_file: "{{swap_file_path}}"
-      tags:
-        - swap.set.file.path
-
-    - name: Check if swap file exists
-      stat:
-        path: "/swapfile"
-      register: swap_file_check
-      tags:
-        - swap.file.check
-
-    - name: Create swap file
-      command: fallocate -l {{swap_file_size}} /swapfile
-      when: not swap_file_check.stat.exists
-      tags:
-        - swap.file.create
-
-    - name: Change swap file permissions
-      file: path="/swapfile"
-            owner=root
-            group=root
-            mode=0600
-      tags:
-        - swap.file.permissions
-
-    - name: Format swap file
-      become: yes
-      command: "mkswap /swapfile"
-      when: not swap_file_check.stat.exists
-      tags:
-        - swap.file.mkswap
-
-    - name: Write swap entry in fstab
-      mount: name=none
-            src=/swapfile
-            fstype=swap
-            opts=sw
-            passno=0
-            dump=0
-            state=present
-      tags:
-        - swap.fstab
-
-    - name: Turn on swap
-      become: yes
-      command: swapon -a
-      when: not swap_file_check.stat.exists
-      tags:
-        - swap.turn.on
-
-    - name: Set swappiness
-      become: yes
-      sysctl:
-        name: vm.swappiness
-        value: "{{swappiness}}"
+        value: 10
       tags:
         - swap.set.swappiness

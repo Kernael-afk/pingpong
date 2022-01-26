@@ -1,4 +1,4 @@
 - hosts:
-    - sxm_host_uts
+    - englab
   tasks:
     - action: ping
